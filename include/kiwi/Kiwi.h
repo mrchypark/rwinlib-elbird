@@ -2,8 +2,8 @@
  * @file Kiwi.h
  * @author bab2min (bab2min@gmail.com)
  * @brief Kiwi C++ API를 담고 있는 헤더 파일
- * @version 0.10.0
- * @date 2021-08-31
+ * @version 0.11.1
+ * @date 2022-04-03
  * 
  * 
  */
@@ -60,7 +60,9 @@ namespace kiwi
 		float cutOffThreshold = 5;
 		float unkFormScoreScale = 3;
 		float unkFormScoreBias = 5;
+		float spacePenalty = 7;
 		size_t maxUnkFormSize = 6;
+		size_t spaceTolerance = 0;
 
 		TagSequenceScorer tagScorer;
 
@@ -312,6 +314,26 @@ namespace kiwi
 			maxUnkFormSize = v;
 		}
 
+		size_t getSpaceTolerance() const
+		{
+			return spaceTolerance;
+		}
+
+		void setSpaceTolerance(size_t v)
+		{
+			spaceTolerance = v;
+		}
+
+		float getSpacePenalty() const
+		{
+			return spacePenalty;
+		}
+
+		void setSpacePenalty(float v)
+		{
+			spacePenalty = v;
+		}
+
 		bool getIntegrateAllomorph() const
 		{
 			return integrateAllomorph;
@@ -361,8 +383,8 @@ namespace kiwi
 
 		using MorphemeMap = UnorderedMap<std::pair<KString, POSTag>, size_t>;
 		template<class Fn>
-		MorphemeMap loadMorphemesFromTxt(std::istream&& is, Fn&& filter);
-		void addCorpusTo(RaggedVector<uint16_t>& out, std::istream&& is, MorphemeMap& morphMap);
+		MorphemeMap loadMorphemesFromTxt(std::istream& is, Fn&& filter);
+		void addCorpusTo(RaggedVector<uint16_t>& out, std::istream& is, MorphemeMap& morphMap);
 		void updateForms();
 		void updateMorphemes();
 
