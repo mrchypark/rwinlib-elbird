@@ -2,8 +2,8 @@
  * @file Kiwi.h
  * @author bab2min (bab2min@gmail.com)
  * @brief Kiwi C++ API를 담고 있는 헤더 파일
- * @version 0.11.1
- * @date 2022-04-03
+ * @version 0.11.2
+ * @date 2022-04-13
  * 
  * 
  */
@@ -58,7 +58,7 @@ namespace kiwi
 
 		bool integrateAllomorph = true;
 		float cutOffThreshold = 5;
-		float unkFormScoreScale = 3;
+		float unkFormScoreScale = 5;
 		float unkFormScoreBias = 5;
 		float spacePenalty = 7;
 		size_t maxUnkFormSize = 6;
