@@ -40,6 +40,11 @@ jobs:
           git submodule update --init --recursive
         shell: bash
 
+      - name: build kiwi x64
+        run: |
+          ls
+        shell: bash
+
       - name: Push binaries
         run: |
           version=${{ steps.download.outputs.VERSION }}
