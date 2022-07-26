@@ -28,7 +28,7 @@ jobs:
       - name: install
         run: |
           pacman -Sy mingw-w64-x86_64-cmake
-          ls 
+          ls c:\rtools40\usr\bin
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
       - name: Push binaries
         run: |
