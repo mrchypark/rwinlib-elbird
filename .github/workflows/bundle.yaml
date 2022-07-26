@@ -42,13 +42,13 @@ jobs:
 
       - name: build kiwi x64
         run: |
+          cd Kiwi
           ls
-        shell: bash
+        shell: msys2 {0}
 
       - name: Push binaries
         run: |
           version=${{ steps.download.outputs.VERSION }}
-          git add README.md include share lib*
           git commit -m "Bundle $version ($(date +%F))" || exit 0
           git tag $version
           git push origin master $version
