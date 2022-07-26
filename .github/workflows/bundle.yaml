@@ -27,16 +27,12 @@ jobs:
           update-rtools: true
       - name: install cmake
         run: |
-          echo "[msys]"Include = /etc/pacman.d/rtools.msys" >> c:\\rtools40\\etc\\pacman.conf
-          echo "Include = /etc/pacman.d/rtools.msys" >> c:\\rtools40\\etc\\pacman.conf
-          cat c:\\rtools40\\etc\\pacman.conf
-
-          pacman -Syu --noconfirm cmake
+          pacman -Syu --noconfirm mingw-w64-x86_64-cmake mingw-w64-i686-cmake mingw-w64-ucrt-x86_64-cmake
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: cmake test
         run: |
-          cmake
+          c://rtools40/mingw64.exe cmake
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: kiwi
