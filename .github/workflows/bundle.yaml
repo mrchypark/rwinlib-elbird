@@ -4,12 +4,12 @@ name: bundle binaries
 
 on:
   workflow_dispatch:
+    inputs:
+      kiwiVersion:
+        description: 'Target Version of kiwi'
+        required: false
+        default: 'v0.13.1'
 
-inputs:
-  kiwiVersion:
-    description: 'Target Version of kiwi'
-    required: false
-    default: 'v0.13.1'
 
 jobs:
   build:
