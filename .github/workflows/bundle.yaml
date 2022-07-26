@@ -20,7 +20,7 @@ jobs:
           rtools-version: 40
           update-rtools: true
       - name: install                                                 
-      - run: |
+        run: |
           which cmake
           pacman -Sy cmake
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
