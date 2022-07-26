@@ -30,11 +30,6 @@ jobs:
           pacman -Syu --noconfirm mingw-w64-x86_64-cmake mingw-w64-i686-cmake mingw-w64-ucrt-x86_64-cmake
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
-      - name: cmake test
-        run: |
-          c://rtools40/mingw64.exe cmake
-        shell: c:\rtools40\usr\bin\bash.exe --login {0}
-
       - name: kiwi
         run: |
           cd D:\\a\\rwinlib-elbird
@@ -48,7 +43,7 @@ jobs:
           mkdir b32
           mkdir ucrt
           cd b64
-          MINGW_ARCH=mingw64 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-          MINGW_ARCH=mingw64 make kiwi_static
+          c://rtools40/mingw64.exe cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+          c://rtools40/mingw64.exe make kiwi_static
           
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
