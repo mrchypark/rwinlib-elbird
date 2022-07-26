@@ -38,12 +38,12 @@ jobs:
           git rm third_party/googletest
           git rm third_party/cpuinfo
           git submodule update --init --recursive
-        shell: bash
+        shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: build kiwi x64
         run: |
           cd Kiwi
-          MINGW_ARCH=mingw64 execute 'where' ls
+          MINGW_ARCH=mingw64 ls
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: Push binaries
