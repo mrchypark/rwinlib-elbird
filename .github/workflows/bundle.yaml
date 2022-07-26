@@ -27,8 +27,8 @@ jobs:
           update-rtools: true
       - name: install cmake
         run: |
-          echo "[msys]
-Include = /etc/pacman.d/rtools.msys" >> c:\\rtools40\\etc\\pacman.conf
+          echo "[msys]"Include = /etc/pacman.d/rtools.msys" >> c:\\rtools40\\etc\\pacman.conf
+          echo "Include = /etc/pacman.d/rtools.msys" >> c:\\rtools40\\etc\\pacman.conf
           cat c:\\rtools40\\etc\\pacman.conf
 
           pacman -Syu --noconfirm cmake
