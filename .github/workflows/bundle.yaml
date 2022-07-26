@@ -30,7 +30,7 @@ jobs:
           pacman -Syu --noconfirm mingw-w64-x86_64-cmake mingw-w64-i686-cmake mingw-w64-ucrt-x86_64-cmake
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
-      - name: get kiwi
+      - name: kiwi
         run: |
           cd D:\\a\\rwinlib-elbird
           git clone -b ${{ github.event.inputs.kiwiVersion }} --depth 1 https://github.com/bab2min/Kiwi
@@ -39,12 +39,6 @@ jobs:
           git rm third_party/googletest
           git rm third_party/cpuinfo
           git submodule update --init --recursive
-        shell: c:\rtools40\usr\bin\bash.exe --login {0}
-
-      - name: build kiwi x64
-        run: |
-          cd D:\\a\\rwinlib-elbird
-          cd Kiwi
           mkdir b64
           mkdir b32
           mkdir ucrt
