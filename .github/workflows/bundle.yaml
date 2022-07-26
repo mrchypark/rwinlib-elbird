@@ -25,11 +25,18 @@ jobs:
         with:
           rtools-version: 40
           update-rtools: true
-      - name: install
+      - name: install cmake on x64
         run: |
           pacman -Sy mingw-w64-x86_64-cmake
-          ls c:\rtools40\usr\bin
-        shell: c:\rtools40\usr\bin\bash.exe --login {0}
+        shell: C:\rtools40\mingw64\bin\bash.exe --login {0}
+      - name: install cmake on x32
+        run: |
+          pacman -Sy mingw-w32-i686-cmake
+        shell: C:\rtools40\mingw32\bin\bash.exe --login {0}
+      - name: install cmake on ucrt
+        run: |
+          pacman -Sy mingw-w64-x86_64-cmake
+        shell: C:\rtools40\ucrt64\bin\bash.exe --login {0}
       - name: Push binaries
         run: |
           version=${{ steps.download.outputs.VERSION }}
