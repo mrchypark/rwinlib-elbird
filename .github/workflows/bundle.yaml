@@ -33,7 +33,7 @@ jobs:
       - name: cmake test
         run: |
           cmake
-        shell: c:\rtools40\mingw64.exe {0}
+        shell: c:\rtools40\mingw64.exe --login {0}
 
       - name: kiwi
         run: |
