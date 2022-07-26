@@ -34,11 +34,11 @@ jobs:
         run: |
           git clone -b ${{ github.event.inputs.kiwiVersion }} --depth 1 https://github.com/bab2min/Kiwi
           cd Kiwi
-
           git rm third_party/mimalloc
           git rm third_party/googletest
           git rm third_party/cpuinfo
           git submodule update --init --recursive
+        shell: bash
 
       - name: Push binaries
         run: |
