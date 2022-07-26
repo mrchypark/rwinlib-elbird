@@ -27,7 +27,8 @@ jobs:
           update-rtools: true
       - name: install
         run: |
-          pacman -S cmake
+          pacman -Sy mingw-w64-x86_64-cmake
+          ls 
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
       - name: Push binaries
         run: |
