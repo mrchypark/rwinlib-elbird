@@ -28,9 +28,12 @@ jobs:
       - name: install cmake
         run: |
           pacman -Syu --noconfirm mingw-w64-x86_64-cmake mingw-w64-i686-cmake mingw-w64-ucrt-x86_64-cmake
-          cd c:\\rtools40
-          ls
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
+
+      - name: cmake test
+        run: |
+          cmake
+        shell: c:\rtools40\mingw64.exe
 
       - name: kiwi
         run: |
