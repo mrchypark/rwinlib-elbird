@@ -43,7 +43,7 @@ jobs:
           mkdir b32
           mkdir ucrt
           cd b64
-          c://rtools40/mingw64.exe cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-          c://rtools40/mingw64.exe make kiwi_static
+          c:\\rtools40\\mingw64.exe cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+          c:\\rtools40\\mingw64.exe make kiwi_static
           
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
