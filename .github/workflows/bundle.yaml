@@ -43,8 +43,8 @@ jobs:
       - name: build kiwi x64
         run: |
           cd Kiwi
-          ls
-        shell: msys2 {0}
+          MINGW_ARCH=mingw64 execute 'where' ls
+        shell: c:\rtools40\usr\bin\bash.exe --login {0}
 
       - name: Push binaries
         run: |
