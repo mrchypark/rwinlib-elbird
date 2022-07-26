@@ -29,6 +29,17 @@ jobs:
         run: |
           pacman -Syu --noconfirm mingw-w64-x86_64-cmake mingw-w64-i686-cmake mingw-w64-ucrt-x86_64-cmake
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
+
+      - name: get kiwi
+        run: |
+          git clone -b ${{ github.event.inputs.kiwiVersion }} --depth 1 https://github.com/bab2min/Kiwi
+          cd Kiwi
+
+          git rm third_party/mimalloc
+          git rm third_party/googletest
+          git rm third_party/cpuinfo
+          git submodule update --init --recursive
+
       - name: Push binaries
         run: |
           version=${{ steps.download.outputs.VERSION }}
