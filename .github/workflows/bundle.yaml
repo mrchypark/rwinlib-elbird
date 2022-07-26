@@ -10,7 +10,6 @@ on:
         required: false
         default: 'v0.13.1'
 
-
 jobs:
   build:
     runs-on: windows-latest
@@ -20,6 +19,7 @@ jobs:
           git config --global core.autocrlf false
           git config --global user.email 'mrchypark@gmail.com'
           git config --global user.name  'Chanyub Park (via CI)'
+      - uses: actions/checkout@v2
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
@@ -32,6 +32,8 @@ jobs:
 
       - name: get kiwi
         run: |
+          cd ..
+          ls
           git clone -b ${{ github.event.inputs.kiwiVersion }} --depth 1 https://github.com/bab2min/Kiwi
           cd Kiwi
           git rm third_party/mimalloc
@@ -43,13 +45,11 @@ jobs:
       - name: build kiwi x64
         run: |
           cd Kiwi
-          MINGW_ARCH=mingw64 ls
+          mkdir b64
+          mkdir b32
+          mkdir ucrt
+          cd b64
+          MINGW_ARCH=mingw64 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+          MINGW_ARCH=mingw64 make kiwi_static
+          
         shell: c:\rtools40\usr\bin\bash.exe --login {0}
-
-      - name: Push binaries
-        run: |
-          version=${{ steps.download.outputs.VERSION }}
-          git commit -m "Bundle $version ($(date +%F))" || exit 0
-          git tag $version
-          git push origin master $version
-        shell: bash
