@@ -20,12 +20,6 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - name: Prepare git
-        run: |
-          git config --global core.autocrlf false
-          git config --global user.email 'mrchypark@gmail.com'
-          git config --global user.name  'Chanyub Park (via CI)'
-      - uses: actions/checkout@v2
       - name: '${{ matrix.icon }} Setup MSYS2'
         uses: msys2/setup-msys2@v2
         with:
@@ -38,11 +32,18 @@ jobs:
             toolchain:p
             cmake:p
 
-      #- name: Switch to Rtools
-      #  run: |
-      #    msys2 -c 'cp -f pacman.conf /etc/pacman.conf'
-      #    msys2 -c 'pacman --noconfirm -Syyuu'
-      #    msys2 -c 'pacman --noconfirm -Suu'
+      - name: Prepare git
+        run: |
+          git config --global core.autocrlf false
+          git config --global user.email 'mrchypark@gmail.com'
+          git config --global user.name  'Chanyub Park (via CI)'
+      - uses: actions/checkout@v2
+
+      - name: Switch to Rtools
+        run: |
+          cp -f pacman.conf /etc/pacman.conf
+          pacman --noconfirm -Syyuu
+          pacman --noconfirm -Suu
 
       - name: kiwi
         run: |
@@ -69,7 +70,6 @@ jobs:
           git add include lib*
           git commit -m "Bundle $version ($(date +%F)) for $sys" || exit 0
           git push origin main
-        shell: bash
 
   publish:
     runs-on: windows-latest
