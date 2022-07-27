@@ -31,7 +31,7 @@ namespace kiwi
 			~Joiner();
 
 			Joiner(const Joiner&);
-			Joiner(Joiner&&) noexcept;
+			Joiner(Joiner&&);
 			Joiner& operator=(const Joiner&);
 			Joiner& operator=(Joiner&&);
 

@@ -21,53 +21,18 @@ namespace kiwi
 			template<class Value>
 			struct HasSubmatch<Value, typename std::enable_if<std::is_integral<Value>::value>::type>
 			{
-				static constexpr bool isNull(const Value& v)
-				{
-					return !v;
-				}
-
-				static void setHasSubmatch(Value& v)
-				{
-					v = (Value)-1;
-				}
-
-				static constexpr bool hasSubmatch(Value v)
-				{
-					return v == (Value)-1;
-				}
+				static constexpr Value hasSubmatch = (Value)-1;
 			};
 
 			template<class Value>
 			struct HasSubmatch<Value, typename std::enable_if<std::is_pointer<Value>::value>::type>
 			{
-				static constexpr bool isNull(const Value& v)
-				{
-					return !v;
-				}
-
-				static void setHasSubmatch(Value& v)
-				{
-					v = (Value)-1;
-				}
-
-				static constexpr bool hasSubmatch(Value v)
-				{
-					return v == (Value)-1;
-				}
-			};
-
-			struct NodeToVal
-			{
-				template<class T>
-				constexpr auto operator()(const T& t) const noexcept -> decltype(t.val)
-				{
-					return t.val;
-				}
+				static constexpr ptrdiff_t hasSubmatch = -1;
 			};
 		}
 
-		template<class _Key, class _Value, class _Diff = int32_t, class _HasSubmatch = detail::HasSubmatch<_Value>>
-		class FrozenTrie : public _HasSubmatch
+		template<class _Key, class _Value, class _Diff = int32_t>
+		class FrozenTrie : public detail::HasSubmatch<_Value>
 		{
 		public:
 			using Key = _Key;
@@ -101,14 +66,14 @@ namespace kiwi
 
 			FrozenTrie() = default;
 
-			template<class TrieNode, ArchType archType, class Xform = detail::NodeToVal>
-			FrozenTrie(const ContinuousTrie<TrieNode>& trie, ArchTypeHolder<archType>, Xform xform = {});
+			template<class TrieNode, ArchType archType>
+			FrozenTrie(const ContinuousTrie<TrieNode>& trie, ArchTypeHolder<archType>);
 
 			FrozenTrie(const FrozenTrie& o);
-			FrozenTrie(FrozenTrie&&) noexcept = default;
+			FrozenTrie(FrozenTrie&&) = default;
 
 			FrozenTrie& operator=(const FrozenTrie& o);
-			FrozenTrie& operator=(FrozenTrie&& o) noexcept = default;
+			FrozenTrie& operator=(FrozenTrie&& o) = default;
 
 			bool empty() const { return !numNodes; }
 			size_t size() const { return numNodes; }
