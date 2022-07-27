@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: kiwi
         run: |
-          cd D:\\a\\rwinlib-elbird
+          cd ..
           git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
           cp -r ./Kiwi/include ./rwinlib-elbird/include
           cd rwinlib-elbird
