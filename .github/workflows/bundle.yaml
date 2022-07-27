@@ -3,14 +3,12 @@
 name: bundle binaries
 
 on:
-  push:
-    branches: [main, master]
   workflow_dispatch:
     inputs:
       kiwiVersion:
         description: 'Target Version of kiwi'
         required: false
-        default: 'v0.13.1'
+        default: 'v0.13.0'
 
 jobs:
   build:
@@ -45,8 +43,9 @@ jobs:
         env:
           MSYSTEM: MSYS
         run: |
+          version=${{ github.event.inputs.kiwiVersion }}
           cd D:\\a\\rwinlib-elbird
-          git clone -b v0.13.0 --depth 1 https://github.com/bab2min/Kiwi
+          git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
           cd Kiwi
           git rm third_party/mimalloc
           git rm third_party/googletest
@@ -67,4 +66,16 @@ jobs:
           MINGW_ARCH=UCRT64 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
           MINGW_ARCH=UCRT64 make kiwi_static    
           cp libkiwi_static.a ../../rwinlib-elbird/lib/x64-ucrt/libkiwi.a
+          cd ../
+          cp include ../include
+          
         shell: msys2 {0}
+
+      - name: Push binaries
+        run: |
+          version=${{ github.event.inputs.kiwiVersion }}
+          git add include lib*
+          git commit -m "Bundle $version ($(date +%F))" || exit 0
+          git tag $version
+          git push origin main $version
+        shell: bash
