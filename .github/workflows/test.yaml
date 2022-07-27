@@ -1,8 +1,12 @@
-
-name: Example CMake
+name: build for R
 
 on:
   workflow_dispatch:
+    inputs:
+      kiwiVersion:
+        description: 'Target Version of kiwi'
+        required: false
+        default: 'v0.13.0'
 
 jobs:
   build:
