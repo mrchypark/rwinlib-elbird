@@ -65,12 +65,11 @@ jobs:
 
       - name: Push binaries
         run: |
-          ls
           version=${{ github.event.inputs.kiwiVersion }}
           sys=${{matrix.sys}}
+          git pull
           git add lib*
           git commit -m "Bundle $version ($(date +%F)) for $sys" || exit 0
-          git pull
           git push origin main
 
   publish:
