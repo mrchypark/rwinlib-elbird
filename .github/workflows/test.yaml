@@ -5,41 +5,75 @@ on:
   workflow_dispatch:
 
 jobs:
-
   build:
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { icon: '⬛', sys: mingw32 }
-          - { icon: '🟦', sys: mingw64 }
-          - { icon: '🟨', sys: ucrt64  } # Experimental!
+          - { icon: '⬛', sys: mingw32, path: i386 }
+          - { icon: '🟦', sys: mingw64, path: x86 }
+          - { icon: '🟨', sys: ucrt64 , path: x86-ucrt}
     name: 🚧${{ matrix.icon }} ${{ matrix.sys }}
+
     defaults:
       run:
         shell: msys2 {0}
     steps:
+      - uses: actions/checkout@v2
+      - name: '${{ matrix.icon }} Setup MSYS2'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.sys}}
+          update: true
+          install: >-
+            git
+            make
+          pacboy: >-
+            toolchain:p
+            cmake:p
 
-    - name: '🧰 Checkout'
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Switch to Rtools
+        run: |
+          msys2 -c 'cp -f pacman.conf /etc/pacman.conf'
+          msys2 -c 'pacman --noconfirm -Syyuu'
+          msys2 -c 'pacman --noconfirm -Suu'
 
-    - name: '${{ matrix.icon }} Setup MSYS2'
-      uses: msys2/setup-msys2@v2  
-      with:
-        msystem: ${{matrix.sys}}
-        update: true
-        install: >-
-          git
-          make
-        pacboy: >-
-          toolchain:p
-          cmake:p
-          ninja:p
+      - name: kiwi
+        run: |
+          version=${{ github.event.inputs.kiwiVersion }}
+          buildpath=${{matrix.path}}
+          cd D:\\a\\rwinlib-elbird
+          git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
+          cd Kiwi
+          git rm third_party/mimalloc
+          git rm third_party/googletest
+          git rm third_party/cpuinfo
+          git submodule update --init --recursive
+          mkdir $buildpath
+          cd $buildpath
+          cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+          make kiwi_static
+          cp libkiwi_static.a ../../rwinlib-elbird/lib/$buildpath/libkiwi.a
 
-    - name: '🚧 Build TOOL'
-      run: |
-        cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
-        cmake --build build
+      - name: Push binaries
+        run: |
+          version=${{ github.event.inputs.kiwiVersion }}
+          sys=${{matrix.sys}}
+          cp -r ../Kiwi/include ./include
+          git add include lib*
+          git commit -m "Bundle $version ($(date +%F)) for $sys" || exit 0
+          git push origin main
+        shell: bash
+
+  tag:
+    runs-on: windows-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - name: tagging
+        run: |
+          version=${{ github.event.inputs.kiwiVersion }}
+          git tag $version
+          git push origin main $version
+        shell: bash

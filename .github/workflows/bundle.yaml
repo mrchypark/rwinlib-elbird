@@ -13,19 +13,34 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { icon: '⬛', sys: mingw32 }
+          - { icon: '🟦', sys: mingw64 }
+          - { icon: '🟨', sys: ucrt64  }
+
     steps:
       - name: Prepare git
         run: |
           git config --global core.autocrlf false
           git config --global user.email 'mrchypark@gmail.com'
           git config --global user.name  'Chanyub Park (via CI)'
+      
       - uses: actions/checkout@v2
 
-      - uses: msys2/setup-msys2@v2
+      - name: '${{ matrix.icon }} Setup MSYS2'
+        uses: msys2/setup-msys2@v2  
         with:
-          msystem: MSYS
-          install: git
+          msystem: ${{matrix.sys}}
           update: true
+          install: >-
+            git
+            make
+          pacboy: >-
+            toolchain:p
+            cmake:p
 
       - name: Switch to Rtools
         run: |
@@ -53,8 +68,8 @@ jobs:
           mkdir b32
           mkdir ucrt
           cd b64
-          MINGW_ARCH=MINGW64 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-          MINGW_ARCH=MINGW64 make kiwi_static
+          cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+          make kiwi_static
           cp libkiwi_static.a ../../rwinlib-elbird/lib/x64/libkiwi.a
           cd ../b32
           MINGW_ARCH=MINGW32 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
