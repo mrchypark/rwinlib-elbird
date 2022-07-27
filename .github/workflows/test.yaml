@@ -91,7 +91,7 @@ jobs:
           git push origin main
       - name: tag push
         run: |
-          cd D:\\a\\rwinlib-elbird
+          cd D:\\a\\rwinlib-elbird\\rwinlib-elbird
           git add include
           git commit -m "Bundle $version ($(date +%F)) include" || exit 0
           version=${{ github.event.inputs.kiwiVersion }}
