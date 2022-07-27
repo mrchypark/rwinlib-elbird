@@ -40,8 +40,6 @@ jobs:
         shell: msys2 {0}
 
       - name: kiwi
-        env:
-          MSYSTEM: MSYS
         run: |
           version=${{ github.event.inputs.kiwiVersion }}
           cd D:\\a\\rwinlib-elbird
@@ -67,7 +65,7 @@ jobs:
           MINGW_ARCH=UCRT64 make kiwi_static    
           cp libkiwi_static.a ../../rwinlib-elbird/lib/x64-ucrt/libkiwi.a
           cd ../
-          cp include ../include
+          cp -r include ../include
           
         shell: msys2 {0}
 
