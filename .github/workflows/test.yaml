@@ -89,6 +89,7 @@ jobs:
           git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
           cp -r ./Kiwi/include ./rwinlib-elbird/include
           cd rwinlib-elbird
+          git push --delete origin $version
           git pull
           git add include
           git status
