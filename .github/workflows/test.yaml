@@ -37,7 +37,6 @@ jobs:
           git config --global core.autocrlf false
           git config --global user.email 'mrchypark@gmail.com'
           git config --global user.name  'Chanyub Park (via CI)'
-      - uses: actions/checkout@v2
 
       - name: Switch to Rtools
         run: |
@@ -62,8 +61,11 @@ jobs:
           make kiwi_static
           cp libkiwi_static.a ../../rwinlib-elbird/lib/$buildpath/libkiwi.a
 
+      - uses: actions/checkout@v2
+
       - name: Push binaries
         run: |
+          cd D:\\a\\rwinlib-elbird
           version=${{ github.event.inputs.kiwiVersion }}
           sys=${{matrix.sys}}
           git add lib*
@@ -89,6 +91,7 @@ jobs:
           git push origin main
       - name: tag push
         run: |
+          cd D:\\a\\rwinlib-elbird
           git add include
           git commit -m "Bundle $version ($(date +%F)) include" || exit 0
           version=${{ github.event.inputs.kiwiVersion }}
