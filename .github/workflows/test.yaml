@@ -13,8 +13,8 @@ jobs:
         include:
           - { sys: mingw32, path: i386 }
           - { sys: mingw64, path: x86 }
-          - { icon: '🟨', sys: ucrt64 , path: x86-ucrt}
-    name: 🚧${{ matrix.icon }} ${{ matrix.sys }}
+          - { sys: ucrt64 , path: x86-ucrt}
+    name: ${{ matrix.sys }} 
 
     defaults:
       run:
@@ -42,8 +42,7 @@ jobs:
       - name: Switch to Rtools
         run: |
           cp -f pacman.conf /etc/pacman.conf
-          pacman --noconfirm -Syyuu
-          pacman --noconfirm -Suu
+          pacman --noconfirm -Syu
 
       - name: kiwi
         run: |
