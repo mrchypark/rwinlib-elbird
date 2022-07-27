@@ -70,6 +70,7 @@ jobs:
           sys=${{matrix.sys}}
           git add lib*
           git commit -m "Bundle $version ($(date +%F)) for $sys" || exit 0
+          git pull
           git push origin main
 
   publish:
