@@ -34,7 +34,7 @@ jobs:
           msys2 -c 'pacman --noconfirm -Suu'
 
       - name: install cmake
-        run: pacman -Syu --noconfirm make cmake
+        run: pacman -Syu --noconfirm gcc make cmake
         env:
           PACMAN_REPOSITORY: rtools
         shell: msys2 {0}
