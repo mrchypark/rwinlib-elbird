@@ -1,6 +1,4 @@
-# all from https://github.com/rwinlib
-
-name: bundle binaries
+name: build for R
 
 on:
   workflow_dispatch:
@@ -17,78 +15,83 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { icon: '⬛', sys: mingw32 }
-          - { icon: '🟦', sys: mingw64 }
-          - { icon: '🟨', sys: ucrt64  }
+          - { sys: mingw32, path: i386 }
+          - { sys: mingw64, path: x64 }
+          - { sys: ucrt64 , path: x64-ucrt}
+    name: ${{ matrix.sys }} 
 
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-      - name: Prepare git
-        run: |
-          git config --global core.autocrlf false
-          git config --global user.email 'mrchypark@gmail.com'
-          git config --global user.name  'Chanyub Park (via CI)'
-      
-      - uses: actions/checkout@v2
-
       - name: '${{ matrix.icon }} Setup MSYS2'
-        uses: msys2/setup-msys2@v2  
+        uses: msys2/setup-msys2@v2
         with:
           msystem: ${{matrix.sys}}
           update: true
           install: >-
             git
-            make
-          pacboy: >-
-            toolchain:p
-            cmake:p
+
+      - name: Prepare git
+        run: |
+          git config --global core.autocrlf false
+          git config --global user.email 'mrchypark@gmail.com'
+          git config --global user.name  'Chanyub Park (via CI)'
+
+      - uses: actions/checkout@v2
 
       - name: Switch to Rtools
         run: |
-          msys2 -c 'cp -f pacman.conf /etc/pacman.conf'
-          msys2 -c 'pacman --noconfirm -Syyuu'
-          msys2 -c 'pacman --noconfirm -Suu'
-
-      - name: install cmake
-        run: pacman -Syu --noconfirm gcc make cmake
-        env:
-          PACMAN_REPOSITORY: rtools
-        shell: msys2 {0}
+          cp -f pacman.conf /etc/pacman.conf
+          pacman --noconfirm -Syu
+          pacman -Syu --noconfirm gcc make cmake
 
       - name: kiwi
         run: |
           version=${{ github.event.inputs.kiwiVersion }}
-          cd D:\\a\\rwinlib-elbird
+          buildpath=${{matrix.path}}
+          cd ..
           git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
           cd Kiwi
           git rm third_party/mimalloc
           git rm third_party/googletest
           git rm third_party/cpuinfo
           git submodule update --init --recursive
-          mkdir b64
-          mkdir b32
-          mkdir ucrt
-          cd b64
+          mkdir $buildpath
+          cd $buildpath
           cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
           make kiwi_static
-          cp libkiwi_static.a ../../rwinlib-elbird/lib/x64/libkiwi.a
-          cd ../b32
-          MINGW_ARCH=MINGW32 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-          MINGW_ARCH=MINGW32 make kiwi_static
-          cp libkiwi_static.a ../../rwinlib-elbird/lib/i386/libkiwi.a
-          cd ../ucrt
-          MINGW_ARCH=UCRT64 cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-          MINGW_ARCH=UCRT64 make kiwi_static    
-          cp libkiwi_static.a ../../rwinlib-elbird/lib/x64-ucrt/libkiwi.a
-          cd ../
-          cp -r include ../include
-          
-        shell: msys2 {0}
+          cp libkiwi_static.a ../../rwinlib-elbird/lib/$buildpath/libkiwi.a
 
       - name: Push binaries
         run: |
           version=${{ github.event.inputs.kiwiVersion }}
-          git add include lib*
-          git commit -m "Bundle $version ($(date +%F))" || exit 0
+          sys=${{matrix.sys}}
+          git pull
+          git add lib*
+          git commit -m "Bundle $version ($(date +%F)) for $sys" || exit 0
+          git push origin main
+
+  publish:
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - name: Prepare git
+        run: |
+          git config --global core.autocrlf false
+          git config --global user.email 'mrchypark@gmail.com'
+          git config --global user.name  'Chanyub Park (via CI)'
+      - uses: actions/checkout@v2
+      - name: tag push
+        run: |
+          version=${{ github.event.inputs.kiwiVersion }}
+          cd ..
+          git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
+          cp -r ./Kiwi/include ./rwinlib-elbird/include
+          cd rwinlib-elbird
+          git pull
+          git add include
+          git status
+          git commit -m "Bundle $version ($(date +%F)) include" || exit 0
           git tag $version
-          git push origin main $version
-        shell: bash
+          git push -f origin main $version
