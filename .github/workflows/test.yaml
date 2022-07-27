@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { icon: '⬛', sys: mingw32, path: i386 }
-          - { icon: '🟦', sys: mingw64, path: x86 }
+          - { sys: mingw32, path: i386 }
+          - { sys: mingw64, path: x86 }
           - { icon: '🟨', sys: ucrt64 , path: x86-ucrt}
     name: 🚧${{ matrix.icon }} ${{ matrix.sys }}
 
@@ -38,11 +38,11 @@ jobs:
             toolchain:p
             cmake:p
 
-      - name: Switch to Rtools
-        run: |
-          msys2 -c 'cp -f pacman.conf /etc/pacman.conf'
-          msys2 -c 'pacman --noconfirm -Syyuu'
-          msys2 -c 'pacman --noconfirm -Suu'
+      #- name: Switch to Rtools
+      #  run: |
+      #    msys2 -c 'cp -f pacman.conf /etc/pacman.conf'
+      #    msys2 -c 'pacman --noconfirm -Syyuu'
+      #    msys2 -c 'pacman --noconfirm -Suu'
 
       - name: kiwi
         run: |
@@ -71,7 +71,7 @@ jobs:
           git push origin main
         shell: bash
 
-  tag:
+  publish:
     runs-on: windows-latest
     needs: [build]
     steps:
@@ -81,7 +81,7 @@ jobs:
           git config --global user.email 'mrchypark@gmail.com'
           git config --global user.name  'Chanyub Park (via CI)'
       - uses: actions/checkout@v2
-      - name: tagging
+      - name: tag push
         run: |
           version=${{ github.event.inputs.kiwiVersion }}
           git tag $version
