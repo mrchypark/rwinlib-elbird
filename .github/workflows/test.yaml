@@ -93,6 +93,5 @@ jobs:
           cd rwinlib-elbird
           git add include
           git commit -m "Bundle $version ($(date +%F)) include" || exit 0
-          version=${{ github.event.inputs.kiwiVersion }}
           git tag $version
           git push origin main $version
