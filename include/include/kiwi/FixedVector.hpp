@@ -35,7 +35,7 @@ namespace kiwi
 			}
 		}
 
-		FixedVector(FixedVector&& o) noexcept
+		FixedVector(FixedVector&& o)
 		{
 			std::swap(_data, o._data);
 		}
@@ -54,7 +54,7 @@ namespace kiwi
 			return *this;
 		}
 
-		FixedVector& operator=(FixedVector&& o) noexcept
+		FixedVector& operator=(FixedVector&& o)
 		{
 			std::swap(_data, o._data);
 			return *this;
@@ -115,7 +115,7 @@ namespace kiwi
 			}
 		}
 
-		FixedPairVector(FixedPairVector&& o) noexcept
+		FixedPairVector(FixedPairVector&& o)
 		{
 			std::swap(_data, o._data);
 		}
@@ -138,7 +138,7 @@ namespace kiwi
 			return *this;
 		}
 
-		FixedPairVector& operator=(FixedPairVector&& o) noexcept
+		FixedPairVector& operator=(FixedPairVector&& o)
 		{
 			std::swap(_data, o._data);
 			return *this;

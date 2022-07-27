@@ -35,9 +35,6 @@ namespace kiwi
 	POSTag toPOSTag(const std::u16string& tagStr);
 	const char* tagToString(POSTag t);
 	const kchar_t* tagToKString(POSTag t);
-	
-	const char* tagRToString(char16_t form, POSTag t);
-	const kchar_t* tagRToKString(char16_t form, POSTag t);
 
 	inline bool isHangulSyllable(char16_t chr)
 	{
@@ -54,14 +51,12 @@ namespace kiwi
 		return os << utf16To8({ str.begin(), str.end() });
 	}
 
-	template<class It>
-	inline std::u16string joinHangul(It first, It last)
+	inline std::u16string joinHangul(const KString& hangul)
 	{
 		std::u16string ret;
-		ret.reserve(std::distance(first, last));
-		for (; first != last; ++first)
+		ret.reserve(hangul.size());
+		for (auto c : hangul)
 		{
-			auto c = *first;
 			if (isHangulCoda(c) && !ret.empty() && isHangulSyllable(ret.back()))
 			{
 				if ((ret.back() - 0xAC00) % 28) ret.push_back(c);
@@ -73,11 +68,6 @@ namespace kiwi
 			}
 		}
 		return ret;
-	}
-
-	inline std::u16string joinHangul(const KString& hangul)
-	{
-		return joinHangul(hangul.begin(), hangul.end());
 	}
 
 	bool isClosingPair(char16_t c);
