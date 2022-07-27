@@ -31,10 +31,6 @@ jobs:
           update: true
           install: >-
             git
-            make
-          pacboy: >-
-            toolchain:p
-            cmake:p
 
       - name: Prepare git
         run: |
@@ -47,6 +43,7 @@ jobs:
         run: |
           cp -f pacman.conf /etc/pacman.conf
           pacman --noconfirm -Syu
+          pacman -Syu --noconfirm gcc make cmake
 
       - name: kiwi
         run: |
