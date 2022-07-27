@@ -73,7 +73,7 @@ jobs:
           git push origin main
 
   publish:
-    runs-on: windows-latest
+    runs-on: ubuntu-20.04
     needs: [build]
     steps:
       - name: Prepare git
@@ -84,6 +84,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: tag push
         run: |
+          version=${{ github.event.inputs.kiwiVersion }}
           ls
           cd ..
           ls
