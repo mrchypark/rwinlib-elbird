@@ -38,6 +38,8 @@ jobs:
           git config --global user.email 'mrchypark@gmail.com'
           git config --global user.name  'Chanyub Park (via CI)'
 
+      - uses: actions/checkout@v2
+
       - name: Switch to Rtools
         run: |
           cp -f pacman.conf /etc/pacman.conf
@@ -60,8 +62,6 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
           make kiwi_static
           cp libkiwi_static.a ../../rwinlib-elbird/lib/$buildpath/libkiwi.a
-
-      - uses: actions/checkout@v2
 
       - name: Push binaries
         run: |
