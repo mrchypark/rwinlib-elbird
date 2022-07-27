@@ -89,7 +89,7 @@ jobs:
           git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
           cp -r ./Kiwi/include ./rwinlib-elbird/include
           cd rwinlib-elbird
-          ls
+          git pull
           git add include
           git status
           git commit -m "Bundle $version ($(date +%F)) include" || exit 0
