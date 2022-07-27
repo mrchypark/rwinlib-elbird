@@ -50,7 +50,7 @@ jobs:
         run: |
           version=${{ github.event.inputs.kiwiVersion }}
           buildpath=${{matrix.path}}
-          cd D:\\a\\rwinlib-elbird
+          ls
           git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
           cd Kiwi
           git rm third_party/mimalloc
