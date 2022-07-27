@@ -62,6 +62,7 @@ jobs:
           mkdir $buildpath
           cd $buildpath
           cmake -DCMAKE_BUILD_TYPE=Release -DKIWI_BUILD_TEST=OFF -DKIWI_USE_CPUINFO=OFF -DKIWI_USE_MIMALLOC=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+          ls
           make kiwi_static
           cp libkiwi_static.a ../../rwinlib-elbird/lib/$buildpath/libkiwi.a
 
