@@ -20,6 +20,11 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
+      - name: Prepare git
+        run: |
+          git config --global core.autocrlf false
+          git config --global user.email 'mrchypark@gmail.com'
+          git config --global user.name  'Chanyub Park (via CI)'
       - uses: actions/checkout@v2
       - name: '${{ matrix.icon }} Setup MSYS2'
         uses: msys2/setup-msys2@v2
@@ -70,6 +75,11 @@ jobs:
     runs-on: windows-latest
     needs: [build]
     steps:
+      - name: Prepare git
+        run: |
+          git config --global core.autocrlf false
+          git config --global user.email 'mrchypark@gmail.com'
+          git config --global user.name  'Chanyub Park (via CI)'
       - uses: actions/checkout@v2
       - name: tagging
         run: |
