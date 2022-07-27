@@ -16,8 +16,8 @@ jobs:
       matrix:
         include:
           - { sys: mingw32, path: i386 }
-          - { sys: mingw64, path: x86 }
-          - { sys: ucrt64 , path: x86-ucrt}
+          - { sys: mingw64, path: x64 }
+          - { sys: ucrt64 , path: x64-ucrt}
     name: ${{ matrix.sys }} 
 
     defaults:
