@@ -87,7 +87,7 @@ jobs:
           version=${{ github.event.inputs.kiwiVersion }}
           cd ..
           git clone -b $version --depth 1 https://github.com/bab2min/Kiwi
-          cp -r ./Kiwi/include ./rwinlib-elbird/include
+          cp -r ./Kiwi/include ./rwinlib-elbird/
           cd rwinlib-elbird
           git pull
           git add include
